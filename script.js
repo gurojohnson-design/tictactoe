@@ -32,6 +32,23 @@ const gameBoard = (function() {
     };
 })();
 
+const gameController = (function() {
+    const winConditions = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+        [0, 4, 8], [2, 4, 6]
+    ];
+    const checkWinner = () => {
+        const board = gameBoard.getBoard();
+
+        return winConditions.some(condition => {
+            const [a, b, c] = condition;
+            return board[a] !== '' && board[a] === board[b] && board[a] === board[c];
+        });
+    };
+    return {checkWinner};
+})();
+
 // makes players stored as objects
 function makePlayer(name, marker) {
     if (!new.target) {
@@ -49,6 +66,8 @@ function makePlayer(name, marker) {
 
 // need to be able to check for winning placement
 // alternate players and placement
+
+
 
 
 
