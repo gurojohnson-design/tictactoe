@@ -4,7 +4,7 @@ const gameBoard = (function() {
     // make the board
     const board = [];
     for(let i = 0; i < 9; i++) {
-        board.push(['']);
+        board.push('');
     }
 
     // get the board
@@ -14,8 +14,8 @@ const gameBoard = (function() {
     const placeMarker = (index, marker) => {
         if (board[index] === '') {
             board[index] = marker;
-            return true;
-        } else return false;
+            return [true, getBoard];
+        } else return [false, getBoard];
     };
 
     // reset board
@@ -33,54 +33,57 @@ const gameBoard = (function() {
 })();
 
 const gameController = (function() {
+    const players = [
+        { name: 'Player 1', marker: 'X'},
+        { name: 'Plaer 2', marker: 'O'},
+    ];
+    let activePlayer = players[0];
+    let gameOver = false;
+
+    const switchPlayer = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+    };
+
+    const playTurn = (index) => {
+        if (gameOver) return;
+
+        const success = gameBoard.placeMarker(index, activePlayer.marker);
+
+        if (success) {
+            checkWinner();
+            gameOver = true;
+        } else {
+            switchPlayer();
+        }
+    };
+
     const winConditions = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [0, 3, 6], [1, 4, 7], [2, 5, 8], 
         [0, 4, 8], [2, 4, 6]
     ];
     const checkWinner = () => {
-        const board = gameBoard.getBoard();
+        const board = gameBoard.getBoard;
 
         return winConditions.some(condition => {
             const [a, b, c] = condition;
-            return board[a] !== '' && board[a] === board[b] && board[a] === board[c];
+            if ((board[a] !== '') && (board[a] === board[b]) && (board[a] === board[c])) {
+                return console.log(`Game over! ${board[a]} wins!!`);
+            } else if (!board.includes('')) {
+                return console.log("Game over! It's a Tie");
+            }
         });
     };
-    return {checkWinner};
+    return { playTurn, getActivePlayer: () => activePlayer};
 })();
 
-// makes players stored as objects
-function makePlayer(name, marker) {
-    if (!new.target) {
-        alert('Must use "new" when declaring new player');
+
+// alternate players and placement
+function gameFlow() {
+    const emptyBoard = getboard => getboard.every(value => value === getboard[0]);
+    if (emptyBoard) {
+        let turn = 0;
+
     }
-    this.name = name;
-    this.marker = marker;
 }
 
-// i have a way to make the board
-// update it
-// and reset it
-
-// also can make players if that's even necessary
-
-// need to be able to check for winning placement
-// alternate players and placement
-
-
-
-
-
-
-
-
-
-
-
-const playerOne = new makePlayer('John', 'X');
-console.log(playerOne);
-
-
-console.log(gameBoard.getBoard);
-console.log(gameBoard.placeMarker);
-console.log(gameBoard.resetBoard);
